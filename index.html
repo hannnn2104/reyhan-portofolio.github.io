@@ -21,7 +21,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav" ms-auto>
+          <ul class="navbar-nav ms-auto">
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="#home">Home</a>
             </li>
@@ -135,7 +135,7 @@
                 
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" aria-describedby="email" name="email"/>
+                <input type="email" class="form-control" id="email" aria-describedby="email" name="email" required/>
                 <div class="mb-3">
   <label for="pesan" class="form-label">Pesan</label>
   <textarea class="form-control" id="pesan" rows="3" name="pesan"></textarea>
@@ -165,32 +165,53 @@
 
 
     <script>
-	const scriptURL = 'https://script.google.com/macros/s/AKfycbxCMV1q6-Je-Y4ylXrvgRTMMHNc8HjQgXME-uryoT_-7XUlqLa3gNlKLM7CIn7pZ2SL/exec'
-	const form = document.forms['reyhan-gtg'];
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbxCMV1q6-Je-Y4ylXrvgRTMMHNc8HjQgXME-uryoT_-7XUlqLa3gNlKLM7CIn7pZ2SL/exec';
+
+  const form = document.forms['reyhan-gtg'];
   const btnKirim = document.querySelector('.btn-kirim');
   const btnLoading = document.querySelector('.btn-loading');
   const myAlert = document.querySelector('.my-alert');
 
-	form.addEventListener('submit', e => {
-		e.preventDefault();
-    // ketika tombol submit diklik
-    // tampilkan tombol loading,hilangkan tombol kirim
-    btnLoading.classList.toggle('d-none');
-    btnKirim.classList.toggle('.d-none');
-		fetch(scriptURL, { method: 'POST', body: new FormData(form) })
-			.then(response => response.json())
-			.then(response => {
-        // tampilkan tombol kirim,hilangkan tombol loading
-        btnLoading.classList.toggle('d-none');
-        btnKirim.classList.toggle('d-none');
-      // tampilkan alert
-      myAlert.classList.toggle('d-none');
-      // reset form
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    // Tampilkan loading
+    btnLoading.classList.remove('d-none');
+    btnKirim.classList.add('d-none');
+
+    fetch(scriptURL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: new FormData(form)
+    })
+    .then(() => {
+
+      console.log('Data berhasil dikirim');
+
+      // Hilangkan loading
+      btnLoading.classList.add('d-none');
+
+      // Tampilkan tombol kirim
+      btnKirim.classList.remove('d-none');
+
+      // Tampilkan alert berhasil
+      myAlert.classList.remove('d-none');
+
+      // Kosongkan form
       form.reset();
-        console.log('Success!', response);
-      })
-			.catch(error => console.error('Error!', error.message))
-	});
+
+    })
+    .catch(error => {
+
+      console.error('Error!', error);
+
+      // Kembalikan tombol
+      btnLoading.classList.add('d-none');
+      btnKirim.classList.remove('d-none');
+
+      alert('Terjadi kesalahan saat mengirim pesan.');
+    });
+  });
 </script>
   </body>
 </html>
